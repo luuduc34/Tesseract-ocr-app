@@ -1,5 +1,5 @@
 # tesseract-app
-[Preview link](https://luxury-sherbet-f3e35f.netlify.app/)
+[Preview link](https://dainty-biscotti-891e3d.netlify.app/)
 
 ## Project setup
 ```
