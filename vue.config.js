@@ -4,7 +4,7 @@ module.exports = defineConfig({
     'vuetify'
   ]
 }),
-  {
+{
   publicPath: process.env.NODE_ENV === 'production'
     ? '/Tesseract-ocr-app/'
     : '/'
