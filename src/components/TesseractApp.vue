@@ -24,19 +24,24 @@
                             <strong>{{ Math.ceil(status) }}%</strong>
                         </v-progress-linear>
                         <h3>Scan result :</h3><br>
-                        <p>{{ output }}</p>
+                        <textarea name="" id="" :style="{ width: '100%', height: '50vh' }">
+                        {{ output }}
+                        </textarea>
+
                     </v-card-text>
                 </v-responsive>
             </v-card>
 
         </div>
+
+
     </div>
 
 </template>
 
 <script>
 import Tesseract from 'tesseract.js';
-
+import { createWorker, PSM, OEM } from 'tesseract.js';
 export default {
     data: () => ({
         image: '',
@@ -58,28 +63,27 @@ export default {
             reader.onload = (e) => {
                 this.image = e.target.result;
 
-                /* Tesseract.recognize(
-                    this.image, 'eng+fra',
-                    {
-                        logger: m => this.status = m.progress * 100
-                    }
-                )
-                    .catch(err => {
-                        console.error(err);
-                    })
-                    .then(out => this.output = out.data.text) */
-                /*  .then(
-                     ({
-                         data: { text }
-                     }) => {
-                         console.log(text)
-                         this.output = text
-                     }
-                 ) */
             };
             reader.readAsDataURL(file);
         },
         scan() {
+            const worker = createWorker({
+                logger: m => this.status = m.progress * 100
+            });
+            (async () => {
+                await worker.load();
+                await worker.loadLanguage('eng+fra');
+                await worker.initialize('eng+fra');
+                await worker.setParameters({
+                    tessedit_ocr_engine_mode: OEM.DEFAULT,
+                    tessedit_pageseg_mode: PSM.SINGLE_BLOCK,
+                });
+                const { data: { text } } = await worker.recognize(this.image);
+                console.log(text);
+                this.output = text;
+                await worker.terminate();
+            })();
+            /* 
             Tesseract.recognize(
                 this.image, 'eng+fra',
                 {
@@ -89,7 +93,7 @@ export default {
                 .catch(err => {
                     console.error(err);
                 })
-                .then(out => this.output = out.data.text)
+                .then(out => this.output = out.data.text) */
         }
     },
 }
