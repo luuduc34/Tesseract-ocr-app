@@ -1,4 +1,5 @@
 # tesseract-app
+Testing an application for character recognizing.
 [Preview link](https://sensational-donut-283014.netlify.app/)
 
 ## Project setup
